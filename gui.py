@@ -15,11 +15,42 @@ menubar = Menu(window)
 window.config(menu=menubar)
 fileMenu = Menu(menubar, tearoff=0)
 
+def openNote():
+    filetext = logic.openFile()
+
+    if filetext is None:
+        return
+
+    text.delete("1.0", "end")
+    text.insert("1.0", filetext)
+
+def saveNote():
+    status.config(text="")
+
+    filetext = text.get("1.0", "end")
+    saved = logic.save(filetext)
+
+    if saved:
+        status.config(text="Saved!")
+
+def createNote():
+    answer = logic.newNote()
+
+    if answer:
+        text.delete("1.0", "end")
+
+def exitApp():
+    answer = logic.exit()
+
+    if answer:
+        window.destroy()
+
 menubar.add_cascade(label="File", menu=fileMenu)
-fileMenu.add_command(label="Open", command=logic.openFile)
-fileMenu.add_command(label="Save", command=logic.save)
+fileMenu.add_command(label="Open", command=openNote)
+fileMenu.add_command(label="Save", command=saveNote)
+fileMenu.add_command(label="New", command=createNote)
 fileMenu.add_separator()
-fileMenu.add_command(label="Exit", command=logic.exit)
+fileMenu.add_command(label="Exit", command=exitApp)
 
 title = Label(window,
               text="MINI NOTES",
@@ -56,7 +87,7 @@ openButton = Button(buttonFrame,
                     activeforeground="#ffffff",
                     padx=15,
                     pady=5,
-                    command=logic.openFile)
+                    command=openNote)
 
 openButton.pack(side="left", padx=5)
 
@@ -69,7 +100,7 @@ saveButton = Button(buttonFrame,
                     activeforeground="#ffffff",
                     padx=15,
                     pady=5,
-                    command=logic.save)
+                    command=saveNote)
 
 saveButton.pack(side="left", padx=5)
 
@@ -82,7 +113,7 @@ newButton = Button(buttonFrame,
                     activeforeground="#ffffff",
                     padx=15,
                     pady=5,
-                    command=logic.newNote)
+                    command=createNote)
 
 newButton.pack(side="left", padx=5)
 
